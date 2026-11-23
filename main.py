@@ -47,6 +47,13 @@ def main() -> None:
             os.remove(path)
     with open(OUTPUT_PATH, "w", encoding="utf-8", newline="\n") as f:
         f.write(LINE)
+    # Verify what was actually written: read it back and confirm it is
+    # byte-for-byte the line, so a silent write failure can never pass
+    # as a valid entry.
+    with open(OUTPUT_PATH, "r", encoding="utf-8", newline="\n") as f:
+        written = f.read()
+    if written != LINE:
+        raise SystemExit("verification failed: entry.txt does not match")
 
 
 if __name__ == "__main__":
